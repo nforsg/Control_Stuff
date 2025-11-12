@@ -1,0 +1,5 @@
+*.svg
+.ipynb_checkpoints
+__pycache__/
+anaconda_projects
+*.png
