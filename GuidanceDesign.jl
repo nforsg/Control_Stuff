@@ -1,3 +1,4 @@
+
 struct S_d
     Beta :: Float64
     p :: Int64
@@ -36,8 +37,8 @@ function straight_line_d(R, θ, psi_d)
     return d
 end
 
-function circular_d(Rc, R)
-    d = R - Rc;
+function circular_d(R, R_prime)
+    d = R_prime - R;
     return d
 end
 
@@ -51,12 +52,20 @@ function simulate!(
     X[1] = x;
     Y[1] = y;
     for t = 2:N
-        θ = atan(y/x);
-        R = norm([x,y]);
         if path == "straight_line"
+            θ = atan(y / x);
+            R = norm([x,y]);
             d = straight_line_d(R, θ, psi_d);
         elseif path == "circular"
-            d = circular_d(Rc, R)  # Example radius for circular path
+            pos = [X[t-1], Y[t-1]];
+            n = normalize(pos - c);
+            grad_R = (n[2]-c[2] ) / ( n[1]-c[1] );
+            grad_tangent = - 1 / grad_R;
+            psi_d = atan(grad_tangent, 1);
+            # States
+
+            R_prime = norm([X[t-1], Y[t-1]] - c);
+            d = circular_d(Rc, R_prime);
         end
         d_dot = SP.v * sin(psi-psi_d);
         S = compute_S_d(d, d_dot, GP);

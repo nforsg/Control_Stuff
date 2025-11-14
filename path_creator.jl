@@ -29,7 +29,7 @@ function circular_path(p, R, λ=1000)
     θ = LinRange(0, 2π, λ)
     x = center_x .+ R * cos.(θ)
     y = center_y .+ R * sin.(θ)
-    path = [x, y]
+    path = [collect(x), collect(y)]
     return path
 end
 
@@ -40,4 +40,3 @@ function plot_path_dist(p, path, idx_min, n=1000)
     y = [diff_path[i][2] for i in 1:length(diff_path)]
     return x, y
 end
-
